@@ -6,9 +6,9 @@ public class Console {
 
     Scanner scanner = new Scanner(System.in);
 
-    public int promptForInt(String prompt){
+    public double promptForDouble(String prompt){
         boolean hasResult = false;
-        int result = -1;
+        double result = -1;
         while(!hasResult) {
             try{
                 System.out.print(prompt);
@@ -30,7 +30,7 @@ public class Console {
 
     public String promptForString(String prompt){
         System.out.print(prompt);
-        return scanner.nextLine();
+        return scanner.nextLine().toUpperCase();
     }
 
 }

@@ -1,5 +1,9 @@
 package com.pluralsight;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.Objects;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -29,22 +33,59 @@ public class Main {
         do {
             option = console.promptForString(homeScreenPrompt);
             switch (option) {
-                case "D".equalsIgnoreCase("d"):
-                    x;
+                case "D":
+                    addTransaction(true);
                     break;
-                case "P".equalsIgnoreCase("p"):
+                case "P":
+                    addTransaction(false);
+                    break;
+                case "L":
                     //x;
                     break;
-                case "L".equalsIgnoreCase("L"):
-                    //x;
-                    break;
-                case "X".equalsIgnoreCase("x"):
+                case "X":
                     System.out.println("Exiting... Have a great day, and continue to be financially responsible");
                 default:
                     System.out.println("Invalid choice. Please try again");
             }
-        } while(!Objects.equals(option, "d"));
+        } while(!option.equals("x"));
+    }
 
+    private static void addTransaction(boolean isDeposit){
+
+        try{
+            //Tell computer to open up the file(Re-create file overwriting any existing data)
+            FileWriter fw = new FileWriter("FileWriter");
+            BufferedWriter writer = new BufferedWriter(fw);
+
+            LocalDate date = LocalDate.now();
+            LocalTime time = LocalTime.now().withNano(0); //with nano removes nanoseconds to make time appear cleaner
+
+
+            String description;
+            String vendor;
+            String transaction;
+            double amount;
+
+            description = console.promptForString("Enter description: ");
+            vendor = console.promptForString("Enter vendor: ");
+            amount = console.promptForDouble("Enter amount: ");
+
+            if (!isDeposit){
+                amount = -Math.abs(amount);
+                //makes that even if a negative number is typed the computer makes it positive and the " - " makes it negative
+            }
+
+            //transaction = console.promptForString("%s|%s|%s|%s|%.2f", date, time, description, vendor, amount);
+            transaction = String.format("%s|%s|%s|%s|%.2f", date, time, description, vendor, amount);
+
+            //add my formatted transaction to file, and adds it to new line.
+            writer.write(transaction);
+            writer.newLine();
+            System.out.println("Transaction Added.");
+
+        }catch (Exception e) {
+            System.out.println("Error writing to file.");
+        }
 
 
     }
