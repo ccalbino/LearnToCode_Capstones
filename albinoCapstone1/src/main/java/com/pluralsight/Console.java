@@ -30,7 +30,7 @@ public class Console {
 
     public String promptForString(String prompt){
         System.out.print(prompt);
-        return scanner.nextLine().toUpperCase();
+        return scanner.nextLine().trim();
     }
 
 }
