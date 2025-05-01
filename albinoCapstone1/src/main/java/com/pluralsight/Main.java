@@ -2,6 +2,7 @@ package com.pluralsight;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -15,6 +16,8 @@ public class Main {
     public static ArrayList<Transaction> transactionList = new ArrayList<>();
 
     public static void main(String[] args) {
+
+       // transactionList = ;
 
 
         showScreenHome();
@@ -83,7 +86,7 @@ public class Main {
 
             writer.close();
 
-        }catch (Exception e) {
+        }catch (IOException e) {
             System.out.println("Error writing to file.");
         }
 
