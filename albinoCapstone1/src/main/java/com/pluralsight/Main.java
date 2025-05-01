@@ -44,7 +44,7 @@ public class Main {
                     addTransaction(false);
                     break;
                 case "L":
-                    //ledgerMenu;
+                    Ledger.ledgerMenu(); //call ledgerMenu from class ledger
                     break;
                 case "X":
                     System.out.println("Exiting... Have a great day, and continue to be financially responsible");
@@ -73,7 +73,6 @@ public class Main {
         try{
             //Tell computer to open up the file(Re-create file overwriting any existing data)
             FileWriter fw = new FileWriter("transactions.csv", true);
-
             BufferedWriter writer = new BufferedWriter(fw);
 
 

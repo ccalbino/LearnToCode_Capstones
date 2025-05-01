@@ -12,7 +12,8 @@ public class Console {
         while(!hasResult) {
             try{
                 System.out.print(prompt);
-                result = scanner.nextInt();
+                result = scanner.nextDouble()
+            ;
                 scanner.nextLine();
                 hasResult = true;
 
