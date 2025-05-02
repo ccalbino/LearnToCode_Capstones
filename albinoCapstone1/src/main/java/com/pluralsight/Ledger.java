@@ -12,7 +12,7 @@ import java.util.regex.Pattern;
 public class Ledger {
 
     public static Console console = new Console();
-    private static List<Transaction> transactions = allEntries(); //loads all transactions once entred
+    private static List<Transaction> transactions = allEntries(); //loads all transactions once entered
 
 
     public static void ledgerMenu() {
@@ -22,6 +22,7 @@ public class Ledger {
                         "A) All Entries   - Displays all transactions\n" +
                         "D) Deposits      - Displays only deposits\n" +
                         "P) Payments      - Displays only payments\n" +
+                        "B) Balance      -  Displays only balance\n" +
                         "R) Reports       - Ability to search through all reports\n" +
                         "H) Home          - Return to home page \n" +
                         "\n" +
@@ -36,36 +37,27 @@ public class Ledger {
                     displayAllTransactions();
                     break;
                 case "D":
-                    //Deposits;
+                    displayDepositsOrPayments(option);
                     break;
                 case "P":
-                    //Payments;
+                    displayDepositsOrPayments(option);
+                    break;
+                case "B":
+                    displayBalances();
                     break;
                 case "R":
-                   //Report.;
+                   Report.reportMenu();
                     break;
                 case "H":
-                    System.out.println("Exiting... Have a great day, and continue to be financially responsible");
+                    System.out.println("Exiting... Have a great day, and continue to be financially responsible. \n");
                     break;
                 default:
                     System.out.println("Invalid choice. Please try again");
             }
-        } while (!option.equals("X"));
+        } while (!option.equals("H"));
 
 
     }
-
-    public static void displayAllTransactions() {
-        System.out.println(Transaction.getFormattedLedgerTextHeader());
-
-        for (Transaction t : transactions) {
-                System.out.println(t.getFormattedLedgerText());
-
-        }
-
-    }
-
-
     public static List<Transaction> allEntries() {
         ArrayList<Transaction> entries = new ArrayList<>();
 
@@ -90,6 +82,17 @@ public class Ledger {
     }
 
 
+    public static void displayAllTransactions() {
+        System.out.println(Transaction.getLedgerTextHeaderFormatted());
+
+        for (Transaction t : transactions) {
+            System.out.println(t.getLedgerTextFormatted());
+
+        }
+
+    }
+
+
     public static Transaction getTransactionFromEncodedString(String encodedTransaction) {
         String[] temp = encodedTransaction.split(Pattern.quote("|"));
 
@@ -103,9 +106,43 @@ public class Ledger {
         return new Transaction(date, time, description, vendor, amount);
 
     }
+
+
+    public static void displayDepositsOrPayments(String option) {
+        transactions = allEntries();
+
+        System.out.println(Transaction.getLedgerTextHeaderFormatted());
+
+        for (Transaction transaction : transactions) {
+            if (option.equalsIgnoreCase("d") && transaction.getAmount() < 0) {
+                continue;
+            }
+            if (option.equalsIgnoreCase("p") && transaction.getAmount() > 0) {
+                continue;
+            }
+            System.out.println(transaction.getLedgerTextFormatted());
+
+        }
+    }
+
+    public static void calculateBalances() {
+        double balance = 0;
+        for (int i = transactions.size() -1; i >=  0; i--) {
+            balance += transactions.get(i).getAmount();
+            transactions.get(i).setBalance(balance);
+        }
+    }
+
+    private static void displayBalances() {
+        calculateBalances();
+        double balance = transactions.isEmpty() ? 0 : transactions.get(0).getBalance();
+        System.out.printf("Current balance: %.2f\n", balance);
+    }
+
 }
 
 // add D and P from
+
 
 
 

@@ -11,6 +11,7 @@ public class Transaction {
     private String description;
     private String vendor;
     private double amount;
+    private double balance;
 
 public Transaction(LocalDate date, LocalTime time, String description, String vendor, double amount){
     this.date = date;
@@ -18,6 +19,7 @@ public Transaction(LocalDate date, LocalTime time, String description, String ve
     this.description = description;
     this.vendor = vendor;
     this.amount = amount;
+    this.balance = balance;
     }
 
 
@@ -45,30 +47,38 @@ public Transaction(LocalDate date, LocalTime time, String description, String ve
         return amount;
     }
 
-    public String getFormattedToLog(){
-        String dateString = this.date.toString();
-        DateTimeFormatter x = DateTimeFormatter.ofPattern("HH:mm:ss");
-
-
-        String result = String.format("%s|%s|%s|%s|%.2f",
-               this.date,
-                this.time,
-                this.getDescription(),
-                this.getVendor(),
-                this.amount);
-
-
-        return result;
+    double getBalance() {
+        return balance;
     }
 
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 
-    public String getFormattedLedgerText() {
+    //    public String getFormattedToLog(){
+//        String dateString = this.date.toString();
+//        DateTimeFormatter x = DateTimeFormatter.ofPattern("HH:mm:ss");
+//
+//
+//        String result = String.format("%s|%s|%s|%s|%.2f",
+//               this.date,
+//                this.time,
+//                this.getDescription(),
+//                this.getVendor(),
+//                this.amount);
+//
+//
+//        return result;
+//    }
+
+
+    public String getLedgerTextFormatted() {
         return String.format("%-12s %-10s %-30s %-20s %10.2f",
                 this.date, this.time, this.description, this.vendor, this.amount);
     }
 
 
-    public static String getFormattedLedgerTextHeader() {
+    public static String getLedgerTextHeaderFormatted() {
         return    "\nDATE         TIME       DESCRIPTION                    VENDOR               AMOUNT ($)\n"
                 + "------------ ---------- ------------------------------ -------------------- ----------";
     }

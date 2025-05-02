@@ -33,7 +33,8 @@ public class Main {
                         "P) Make Payment (Debit) \n" +
                         "L) Ledger \n" +
                         "X) Exit \n" +
-                        "(D, P, L, X): ";
+                        "(D, P, L, X): \n" +
+                        "\n";
 
         String option;
 
@@ -82,7 +83,7 @@ public class Main {
             //add my formatted transaction to file, and adds it to new line.
             writer.write(String.format("%s|%s|%s|%s|%.2f", date, time, description, vendor, amount));
             writer.newLine();
-            System.out.println("Transaction Added.");
+            System.out.println("Transaction Added. /n");
 
             writer.close();
 
