@@ -18,7 +18,7 @@ public class Console {
                 hasResult = true;
 
             } catch (Exception e) {
-                System.out.println("Invalid entry, please try again!");
+                System.out.println("\nInvalid entry, please try again! \n");
                 scanner.next();
             }
         }

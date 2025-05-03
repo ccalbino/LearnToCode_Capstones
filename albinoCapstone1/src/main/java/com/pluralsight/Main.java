@@ -51,10 +51,10 @@ public class Main {
                     Ledger.ledgerMenu(); //call ledgerMenu from class ledger
                     break;
                 case "X":
-                    System.out.println("Exiting... Have a great day, and continue to be financially responsible");
+                    System.out.println("Exiting... Have a great day, and continue to be financially responsible \n");
                     break;
                 default:
-                    System.out.println("Invalid choice. Please try again");
+                    System.out.println("Invalid choice. Please try again \n");
             }
         } while(!option.equals("X"));
     }
@@ -83,12 +83,12 @@ public class Main {
             //add my formatted transaction to file, and adds it to new line.
             writer.write(String.format("%s|%s|%s|%s|%.2f", date, time, description, vendor, amount));
             writer.newLine();
-            System.out.println("Transaction Added. /n");
+            System.out.println("\nTransaction Added. \n");
 
             writer.close();
 
         }catch (IOException e) {
-            System.out.println("Error writing to file.");
+            System.out.println("Error writing to file. \n");
         }
 
 

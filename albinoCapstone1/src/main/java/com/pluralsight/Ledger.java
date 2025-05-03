@@ -85,8 +85,8 @@ public class Ledger {
     public static void displayAllTransactions() {
         System.out.println(Transaction.getLedgerTextHeaderFormatted());
 
-        for (Transaction t : transactions) {
-            System.out.println(t.getLedgerTextFormatted());
+        for (Transaction transaction : transactions) {
+            System.out.println(transaction.getLedgerTextFormatted());
 
         }
 
@@ -136,7 +136,7 @@ public class Ledger {
     private static void displayBalances() {
         calculateBalances();
         double balance = transactions.isEmpty() ? 0 : transactions.get(0).getBalance();
-        System.out.printf("Current balance: %.2f\n", balance);
+        System.out.printf("Current balance: $%.2f\n", balance);
     }
 
 }
