@@ -12,21 +12,21 @@ import java.util.regex.Pattern;
 public class Ledger {
 
     public static Console console = new Console();
-    private static List<Transaction> transactions = allEntries(); //loads all transactions once entered
-
 
     public static void ledgerMenu() {
 
         String ledgerPrompt =
-                "-----------\n" +
-                        "A) All Entries   - Displays all transactions\n" +
-                        "D) Deposits      - Displays only deposits\n" +
-                        "P) Payments      - Displays only payments\n" +
-                        "B) Balance      -  Displays only balance\n" +
-                        "R) Reports       - Ability to search through all reports\n" +
-                        "H) Home          - Return to home page \n" +
-                        "\n" +
-                        "Please enter your selection \n";
+                """
+                        -----------
+                        A) All Entries   - Displays all transactions
+                        D) Deposits      - Displays only deposits
+                        P) Payments      - Displays only payments
+                        B) Balance      -  Displays only balance
+                        R) Reports       - Ability to search through all reports
+                        H) Home          - Return to home page\s
+                        
+                        Please enter your selection\s
+                        """;
 
         String option;
 
@@ -46,7 +46,7 @@ public class Ledger {
                     displayBalances();
                     break;
                 case "R":
-                   Report.reportMenu();
+                    Report.reportMenu();
                     break;
                 case "H":
                     System.out.println("Exiting... Have a great day, and continue to be financially responsible. \n");
@@ -58,7 +58,8 @@ public class Ledger {
 
 
     }
-    public static List<Transaction> allEntries() {
+
+    public static List<Transaction> allEntries() { //loads transactions from csv file
         ArrayList<Transaction> entries = new ArrayList<>();
 
         try {
@@ -66,7 +67,7 @@ public class Ledger {
             //open file and read
             FileReader fr = new FileReader("transactions.csv");
             BufferedReader reader = new BufferedReader(fr);
-            Main.transactionList.clear(); //This clears data in file before adding new. Very important.
+            Main.transactionList.clear(); //This clears data in file before adding new.
 
             String dataString;
 
@@ -83,15 +84,13 @@ public class Ledger {
 
 
     public static void displayAllTransactions() {
+        List<Transaction> transactions = allEntries(); //loads all transactions and prints below
         System.out.println(Transaction.getLedgerTextHeaderFormatted());
 
         for (Transaction transaction : transactions) {
             System.out.println(transaction.getLedgerTextFormatted());
-
         }
-
     }
-
 
     public static Transaction getTransactionFromEncodedString(String encodedTransaction) {
         String[] temp = encodedTransaction.split(Pattern.quote("|"));
@@ -104,12 +103,11 @@ public class Ledger {
         double amount = Double.parseDouble(temp[4]);
 
         return new Transaction(date, time, description, vendor, amount);
-
     }
 
 
     public static void displayDepositsOrPayments(String option) {
-        transactions = allEntries();
+        List<Transaction> transactions = allEntries();
 
         System.out.println(Transaction.getLedgerTextHeaderFormatted());
 
@@ -121,33 +119,26 @@ public class Ledger {
                 continue;
             }
             System.out.println(transaction.getLedgerTextFormatted());
-
         }
     }
 
-    public static void calculateBalances() {
+    public static void calculateBalances(List<Transaction> transactions) {
         double balance = 0;
-        for (int i = transactions.size() -1; i >=  0; i--) {
+        for (int i = transactions.size() - 1; i >= 0; i--) {
             balance += transactions.get(i).getAmount();
             transactions.get(i).setBalance(balance);
         }
     }
 
     private static void displayBalances() {
-        calculateBalances();
-        double balance = transactions.isEmpty() ? 0 : transactions.get(0).getBalance();
-        System.out.printf("Current balance: $%.2f\n", balance);
+        List<Transaction> transactions = allEntries(); // always a fresh list
+        calculateBalances(transactions);
+        //if no transactions set balance to 0, otherwise use the most recent balance
+        double balance = transactions.isEmpty() ? 0 : transactions.getFirst().getBalance();
+
+        String colorCode = balance < 0 ? "\u001B[31m" : "\u001B[34m"; // Red for negative, blue for positive
+        String resetCode = "\u001B[0m";
+
+        System.out.printf("Current balance: %s$%.2f%s\n", colorCode, balance, resetCode);
     }
-
 }
-
-// add D and P from
-
-
-
-
-         //returns whole transactionList
-
-
-
-

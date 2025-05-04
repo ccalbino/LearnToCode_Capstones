@@ -1,34 +1,36 @@
 package com.pluralsight;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class Report {
 
     public static Console console = new Console();
-    private static List<Transaction> transactions = Ledger.allEntries(); //loads all transactions from ledger class "allEntries" once report menu is accessed
+    private static final List<Transaction> transactions = Ledger.allEntries(); //loads all transactions from ledger class "allEntries" once report menu is accessed
 
 
-
-    public static String reportMenu() {
+    public static void reportMenu() {
 
         String ledgerPrompt =
-                "-----------\n" +
-                        "1) Month To Date \n" +
-                        "2) Previous Month\n" +
-                        "3) Year to Date\n" +
-                        "4) Previous Year\n" +
-                        "5) Search by Vendor\n" +
-                        "6) Custom Search\n" +
-                        "0) Back\n" +
-                        "\n" +
-                        "Please enter your selection \n";
+                """
+                        -----------
+                        1) Month To Date\s
+                        2) Previous Month
+                        3) Year to Date
+                        4) Previous Year
+                        5) Search by Vendor
+                        6) Custom Search
+                        0) Back
+                        
+                        Please enter your selection\s
+                        """;
 
         int option;
 
         do {
-            option = (int) console.promptForInt(ledgerPrompt);
-            switch ((int) option) {
+            option = (int) console.promptForDouble(ledgerPrompt);
+            switch (option) {
                 case 1:
                     displayMonthToDate();
                     break;
@@ -45,7 +47,7 @@ public class Report {
                     searchByVendor();
                     break;
                 case 6:
-                    //Report.;
+                    customSearch();
                     break;
                 case 0:
                     System.out.println("Exiting back to Ledger screen... Have a great day, and continue to be financially responsible. \n");
@@ -55,7 +57,6 @@ public class Report {
             }
         } while (option != 0);
 
-        return ledgerPrompt;
     }
 
     //All transactions(+/-) from current month
@@ -65,7 +66,7 @@ public class Report {
 
         for (Transaction transaction : transactions) {
             if (transaction.getDate().getMonthValue() == todayDate.getMonthValue() &&
-            transaction.getDate().getYear() == todayDate.getYear()){
+                    transaction.getDate().getYear() == todayDate.getYear()) {
                 System.out.println(transaction.getLedgerTextFormatted());
             }
         }
@@ -79,11 +80,10 @@ public class Report {
 
         for (Transaction transaction : transactions) {
             if (transaction.getDate().getMonthValue() == previousMonth.getMonthValue() &&
-            transaction.getDate().getYear() == previousMonth.getYear()) {
+                    transaction.getDate().getYear() == previousMonth.getYear()) {
                 System.out.println(transaction.getLedgerTextFormatted());
             }
         }
-
     }
 
     //All transactions(+/-) from current year
@@ -119,7 +119,7 @@ public class Report {
 
             boolean found = false;
             for (Transaction transaction : transactions) {
-                if (transaction.getVendor().toLowerCase().contains(vendor)) {
+                if (transaction.getVendor().toLowerCase().contains(vendor)) { //allows for a user-friendly partial search
                     if (!found) {
                         System.out.println(Transaction.getLedgerTextHeaderFormatted());
                         found = true;
@@ -142,11 +142,90 @@ public class Report {
                     keepSearching = false; // Exit outer loop
                     break;
                 } else {
-                    System.out.println("Please enter 'Y' to search again or 'N' to return.");
+                    System.out.println("\nPlease enter 'Y' to search again or 'N' to return.");
                 }
             }
         }
     }
+
+    //Custom Search based on user input
+    public static void customSearch() {
+        LocalDate startDate = null;
+        LocalDate endDate = null;
+        Double amountFilter = null;
+
+        // Start Date input with validation
+        while (true) {
+            String startUserInput = console.promptForString("Enter Start Date (yyyy/MM/dd) or press Enter to skip \n");
+            if (startUserInput.isBlank()) {
+                break; // user chose to skip
+            }
+            try {
+                startDate = LocalDate.parse(startUserInput, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid start date format. Please use (yyyy/MM/dd) ex.(2025/05/21)");
+            }
+        }
+
+        // End Date input with validation
+        while (true) {
+            String endUserInput = console.promptForString("Enter End Date (yyyy/MM/dd) or press Enter to skip \n");
+            if (endUserInput.isBlank()) {
+                break;
+            }
+            try {
+                endDate = LocalDate.parse(endUserInput, DateTimeFormatter.ofPattern("yyyy/MM/dd"));
+                break;
+            } catch (Exception e) {
+                System.out.println("Invalid end date format. Please use (yyyy/MM/dd) ex.(2025/05/21)");
+            }
+        }
+
+        String descriptionUserInput = console.promptForString("Enter description or press Enter to skip \n");
+        String vendorUserInput = console.promptForString("Enter vendor or press Enter to skip \n");
+
+        // Amount input with validation
+        while (true) {
+            String amountUserInput = console.promptForString("Enter amount (00.00) or press Enter to skip \n");
+            if (amountUserInput.isBlank()) {
+                break;
+            }
+            try {
+                amountFilter = Double.parseDouble(amountUserInput);
+                break;
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid amount. Please enter a number.");
+            }
+        }
+
+        if (transactions.isEmpty()) {
+            System.out.println("No transactions found.");
+            return;
+        }
+
+        boolean matchFound = false;
+        for (Transaction transaction : transactions) {
+            if (startDate != null && transaction.getDate().isBefore(startDate))
+                continue;
+            if (endDate != null && transaction.getDate().isAfter(endDate))
+                continue;
+            if (!descriptionUserInput.isBlank() && !transaction.getDescription().toLowerCase().contains(descriptionUserInput.toLowerCase()))
+                continue;
+            if (!vendorUserInput.isBlank() && !transaction.getVendor().toLowerCase().contains(vendorUserInput.toLowerCase()))
+                continue;
+            if (amountFilter != null && Math.abs(transaction.getAmount()) != Math.abs(amountFilter)) //allows for + or - amount filter
+                continue;
+
+            System.out.println(transaction.getLedgerTextFormatted());
+            matchFound = true;
+        }
+
+        if (!matchFound) {
+            System.out.println("No matching transactions found.");
+        }
+    }
+}
 
     //Recursion: everytime I entered y the method called itself again
 //    public static void searchByVendor() {
@@ -178,4 +257,4 @@ public class Report {
 //            }
 //        }
 //    }
-}
+

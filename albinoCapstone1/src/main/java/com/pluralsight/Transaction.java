@@ -2,7 +2,6 @@ package com.pluralsight;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 
 public class Transaction {
 
@@ -28,11 +27,6 @@ public Transaction(LocalDate date, LocalTime time, String description, String ve
     }
 
 
-    public LocalTime getTime() {
-        return time;
-    }
-
-
     public String getDescription() {
         return description;
     }
@@ -55,32 +49,19 @@ public Transaction(LocalDate date, LocalTime time, String description, String ve
         this.balance = balance;
     }
 
-    //    public String getFormattedToLog(){
-//        String dateString = this.date.toString();
-//        DateTimeFormatter x = DateTimeFormatter.ofPattern("HH:mm:ss");
-//
-//
-//        String result = String.format("%s|%s|%s|%s|%.2f",
-//               this.date,
-//                this.time,
-//                this.getDescription(),
-//                this.getVendor(),
-//                this.amount);
-//
-//
-//        return result;
-//    }
-
-
     public String getLedgerTextFormatted() {
-        return String.format("%-12s %-10s %-30s %-20s %10.2f",
-                this.date, this.time, this.description, this.vendor, this.amount);
+        String colorCode = this.amount < 0 ? "\u001B[31m" : "\u001B[34m"; // red or blue
+        String resetCode = "\u001B[0m";
+
+        return String.format("%-12s %-10s %-30s %-20s %s%12.2f%s",
+                date, time, description, vendor, colorCode, amount, resetCode);
     }
 
-
     public static String getLedgerTextHeaderFormatted() {
-        return    "\nDATE         TIME       DESCRIPTION                    VENDOR               AMOUNT ($)\n"
-                + "------------ ---------- ------------------------------ -------------------- ----------";
+        return "\n" +
+                String.format("%-12s %-10s %-30s %-20s %12s",
+                        "DATE", "TIME", "DESCRIPTION", "VENDOR", "AMOUNT ($)") + "\n" +
+                "------------ ---------- ------------------------------ -------------------- ------------";
     }
 }
 
