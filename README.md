@@ -56,6 +56,7 @@ Search by Vendor. Partial search included.
 ![Screenshot 2025-05-04 195823](https://github.com/user-attachments/assets/980332a4-3a94-4396-8a09-519e2ac8eed9)
 
 Custom Search accessed from the Report’s menu 
+
 ---
 #### Code I Learned the Most From
 ![Screenshot 2025-05-04 192417](https://github.com/user-attachments/assets/f28e13fa-a701-45d6-b5e0-55dfb6c3fa91)
